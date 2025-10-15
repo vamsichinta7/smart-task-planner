@@ -19,14 +19,15 @@ const PORT = process.env.PORT || 3002;
 app.use(helmet());
 
 const allowedOrigins = [
-  process.env.CORS_ORIGIN || 'http://localhost:3002',
-  'https://smart-task-planner-nqo9.vercel.app' // <-- your deployed frontend URL
+  'https://smart-task-planner-nqo9.vercel.app',
+  'http://localhost:3002' // For local frontend testing
 ];
 
 app.use(cors({
   origin: allowedOrigins,
   credentials: true
 }));
+
 
 
 // Body parsing middleware
