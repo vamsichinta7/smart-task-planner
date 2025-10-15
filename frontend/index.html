@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Task Planner</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="bg-animation">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="app-title">Smart Task Planner</h1>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="total-tasks">0</span>
+                        <span class="stat-label">Tasks</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="completion-rate">0%</span>
+                        <span class="stat-label">Complete</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="total-hours">0h</span>
+                        <span class="stat-label">Estimated</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            
+            <!-- Goal Input Section -->
+            <section class="goal-section" id="goal-section">
+                <div class="glass-card">
+                    <h2>What's your goal?</h2>
+                    <p class="section-description">Describe your project goal and let our AI break it down into manageable tasks.</p>
+                    
+                    <form id="goal-form" class="goal-form">
+                        <div class="form-group">
+                            <label for="goal-input" class="form-label">Project Goal</label>
+                            <textarea 
+                                id="goal-input" 
+                                class="form-control goal-input" 
+                                placeholder="e.g., Launch a mobile social media app in 8 weeks"
+                                rows="4"
+                                required
+                            ></textarea>
+                        </div>
+                        <button type="submit" class="btn btn--primary btn--large">
+                            <span class="btn-text">Generate Task Plan</span>
+                            <span class="btn-loader hidden">
+                                <div class="spinner"></div>
+                                Processing...
+                            </span>
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- AI Processing Section -->
+            <section class="processing-section hidden" id="processing-section">
+                <div class="glass-card processing-card">
+                    <div class="ai-animation">
+                        <div class="pulse-ring"></div>
+                        <div class="pulse-ring ring-2"></div>
+                        <div class="pulse-ring ring-3"></div>
+                        <div class="ai-brain">🧠</div>
+                    </div>
+                    <h3>AI is analyzing your goal...</h3>
+                    <p class="processing-text">Breaking down complex objectives into actionable tasks</p>
+                    <div class="processing-steps">
+                        <div class="step active" data-step="1">Analyzing complexity</div>
+                        <div class="step" data-step="2">Identifying dependencies</div>
+                        <div class="step" data-step="3">Estimating timeframes</div>
+                        <div class="step" data-step="4">Optimizing workflow</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Task Breakdown Section -->
+            <section class="tasks-section hidden" id="tasks-section">
+                <div class="tasks-header">
+                    <div class="section-title">
+                        <h2>Your Task Breakdown</h2>
+                        <p>AI-generated action plan for your project</p>
+                    </div>
+                    <div class="tasks-controls">
+                        <button class="btn btn--secondary" id="export-btn">Export Plan</button>
+                        <button class="btn btn--outline" id="reset-btn">New Goal</button>
+                    </div>
+                </div>
+
+                <!-- Progress Overview -->
+                <div class="progress-overview">
+                    <div class="glass-card progress-card">
+                        <h3>Progress Overview</h3>
+                        <div class="progress-stats">
+                            <div class="progress-circle-container">
+                                <canvas id="progress-chart" width="120" height="120"></canvas>
+                                <div class="progress-center">
+                                    <span id="progress-percentage">0%</span>
+                                    <span>Complete</span>
+                                </div>
+                            </div>
+                            <div class="progress-details">
+                                <div class="progress-item">
+                                    <span class="progress-label">Total Tasks</span>
+                                    <span class="progress-value" id="progress-total">0</span>
+                                </div>
+                                <div class="progress-item">
+                                    <span class="progress-label">Completed</span>
+                                    <span class="progress-value" id="progress-completed">0</span>
+                                </div>
+                                <div class="progress-item">
+                                    <span class="progress-label">Remaining Hours</span>
+                                    <span class="progress-value" id="progress-hours">0h</span>
+                                </div>
+                                <div class="progress-item">
+                                    <span class="progress-label">Estimated Days</span>
+                                    <span class="progress-value" id="progress-days">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task List -->
+                <div class="task-list" id="task-list">
+                    <!-- Task cards will be dynamically generated here -->
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Export Modal -->
+    <div class="modal hidden" id="export-modal">
+        <div class="modal-backdrop" id="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Export Task Plan</h3>
+                <button class="modal-close" id="modal-close">×</button>
+            </div>
+            <div class="modal-body">
+                <p>Choose your export format:</p>
+                <div class="export-options">
+                    <button class="btn btn--outline export-option" data-format="json">JSON</button>
+                    <button class="btn btn--outline export-option" data-format="csv">CSV</button>
+                    <button class="btn btn--outline export-option" data-format="txt">Text</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
