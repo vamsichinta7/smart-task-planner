@@ -11,20 +11,6 @@ Smart Task Planner is an AI-powered project management tool that automatically b
 
 ---
 
-## 📚 Table of Contents
-
-- [Features](#features)  
-- [Screenshots](#screenshots)  
-- [Tech Stack](#tech-stack)  
-- [Installation](#installation)  
-- [Usage](#usage)  
-- [API Endpoints](#api-endpoints)  
-- [Environment Variables](#environment-variables)  
-- [Contributing](#contributing)  
-- [Author](#author)  
-- [License](#license)  
-
----
 
 ## ✨ Features
 
@@ -209,11 +195,3 @@ Contributions are welcome! Please fork the repo and submit a pull request.
 - **GitHub**: [@vamsichinta7](https://github.com/vamsichinta7)
 
 ---
-
-## 🏷️ License
-
-This project is licensed under the MIT License.
-
----
-
-*Replace image links and environment values as needed for your setup.*
