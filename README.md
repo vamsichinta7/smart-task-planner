@@ -13,7 +13,7 @@ Smart Task Planner is an AI-powered project management tool that automatically b
 
 
 ## ✨ Features
-
+ 
 - 🤖 AI-based goal analysis and task breakdown  
 - ⏱️ Task prioritization and deadline suggestions  
 - 📊 Progress tracking with charts  
