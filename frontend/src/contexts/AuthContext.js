@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import api from '../api/axios';
 
 const AuthContext = createContext();
 
@@ -18,95 +19,66 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      // Set default auth header
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
       // Auto-login with existing token
       autoLogin();
     } else {
-      // Demo mode - create a demo user
-      createDemoUser();
+      // No auto demo creation, user must login
+      setLoading(false);
     }
   }, []);
 
   const autoLogin = async () => {
     try {
-      // In a real app, you'd validate the token with the server
-      // For now, we'll decode the JWT payload (not secure in production!)
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      setUser({
-        id: payload.userId,
-        email: payload.email,
-        name: payload.name || payload.email.split('@')[0]
-      });
+      // Try to validate the token with the server
+      const response = await api.get('/api/auth/me');
+      setUser(response.data.user);
     } catch (error) {
       console.error('Auto-login failed:', error);
+      // Token is invalid, remove it
       logout();
     } finally {
       setLoading(false);
     }
   };
 
-  const createDemoUser = async () => {
-    try {
-      const demoEmail = 'demo@smarttaskplanner.com';
-      const response = await axios.post('/api/auth/login', {
-        email: demoEmail
-      });
 
+
+  const login = async (email, password = null) => {
+    try {
+      const payload = password ? { email, password } : { email };
+      const response = await api.post('/api/auth/login', payload);
       const { token: newToken, user: newUser } = response.data;
 
       setToken(newToken);
       setUser(newUser);
       localStorage.setItem('token', newToken);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
-    } catch (error) {
-      console.error('Demo user creation failed:', error);
-      // Continue without auth for demo purposes
-      setUser({
-        id: 'demo',
-        email: 'demo@smarttaskplanner.com',
-        name: 'Demo User'
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const login = async (email, name) => {
-    try {
-      const response = await axios.post('/api/auth/login', { email });
-      const { token: newToken, user: newUser } = response.data;
-
-      setToken(newToken);
-      setUser(newUser);
-      localStorage.setItem('token', newToken);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
 
       return { success: true };
     } catch (error) {
+
       return {
         success: false,
-        error: error.response?.data?.error || 'Login failed'
+        error: error.response?.data?.error || error.message || 'Login failed'
       };
     }
   };
 
-  const register = async (email, name) => {
+  const register = async (email, name, password = null) => {
     try {
-      const response = await axios.post('/api/auth/register', { email, name });
-      const { token: newToken, user: newUser } = response.data;
+      const payload = password && password.trim() ? { email, name, password } : { email, name };
+      const response = await api.post('/api/auth/register', payload);
+      const { token: newToken, user: newUser, message } = response.data;
 
       setToken(newToken);
       setUser(newUser);
       localStorage.setItem('token', newToken);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
 
-      return { success: true };
+      return { success: true, message };
     } catch (error) {
+
       return {
         success: false,
-        error: error.response?.data?.error || 'Registration failed'
+        error: error.response?.data?.error || error.message || 'Registration failed'
       };
     }
   };
@@ -115,7 +87,6 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     setUser(null);
     localStorage.removeItem('token');
-    delete axios.defaults.headers.common['Authorization'];
   };
 
   const value = {

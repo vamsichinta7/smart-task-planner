@@ -22,7 +22,8 @@ const GoalInput = ({ onSubmit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.goal.trim()) return;
+    const trimmedGoal = formData.goal.trim();
+    if (!trimmedGoal) return;
 
     setIsSubmitting(true);
     try {
@@ -103,14 +104,16 @@ const GoalInput = ({ onSubmit }) => {
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={nextStep}
-                className="next-btn"
-                disabled={!formData.goal.trim()}
-              >
-                Continue
-              </button>
+              <div className="form-actions">
+                <button
+                  type="button"
+                  onClick={nextStep}
+                  className="next-btn"
+                  disabled={!formData.goal.trim()}
+                >
+                  Continue
+                </button>
+              </div>
             </motion.div>
           )}
 

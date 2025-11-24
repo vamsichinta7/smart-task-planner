@@ -3,11 +3,18 @@ const Joi = require('joi');
 const validateUser = (req, res, next) => {
   const schema = Joi.object({
     email: Joi.string().email().required(),
-    name: Joi.string().min(2).max(50).required()
-  });
+    name: Joi.string().min(2).max(50).required(),
+    password: Joi.alternatives().try(
+      Joi.string().min(4).max(100), // Valid password with min 4 chars
+      Joi.string().allow(''), // Allow empty string
+      Joi.allow(null) // Allow null
+    ).optional()
+  }).unknown(true);
 
   const { error } = schema.validate(req.body);
   if (error) {
+    console.error('Validation error:', error.details[0]);
+    console.error('Request body:', req.body);
     return res.status(400).json({ error: error.details[0].message });
   }
 
@@ -64,8 +71,29 @@ const validateTask = (req, res, next) => {
   next();
 };
 
+const validateLogin = (req, res, next) => {
+  const schema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.alternatives().try(
+      Joi.string().min(1), // Valid password with min 1 char
+      Joi.string().allow(''), // Allow empty string
+      Joi.allow(null) // Allow null
+    ).optional()
+  }).unknown(true);
+
+  const { error } = schema.validate(req.body);
+  if (error) {
+    console.error('Validation error:', error.details[0]);
+    console.error('Request body:', req.body);
+    return res.status(400).json({ error: error.details[0].message });
+  }
+
+  next();
+};
+
 module.exports = {
   validateUser,
+  validateLogin,
   validateProject,
   validateTask
 };

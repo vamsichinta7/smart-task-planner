@@ -6,7 +6,10 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #2f3640, #353b48);
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+    linear-gradient(135deg, var(--background), #1e293b);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -35,10 +38,32 @@
 .brain-core {
   width: 100%;
   height: 100%;
-  background-color: #00a8ff;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   border-radius: 50%;
   position: relative;
-  box-shadow: 0 0 20px #00a8ff, 0 0 40px #00a8ff60, 0 0 60px #00a8ff40;
+  box-shadow: 
+    0 0 20px rgba(59, 130, 246, 0.5),
+    0 0 40px rgba(139, 92, 246, 0.3),
+    0 0 60px rgba(59, 130, 246, 0.2),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+  animation: brainPulse 2s ease-in-out infinite;
+}
+
+@keyframes brainPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 
+      0 0 20px rgba(59, 130, 246, 0.5),
+      0 0 40px rgba(139, 92, 246, 0.3),
+      0 0 60px rgba(59, 130, 246, 0.2);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 
+      0 0 25px rgba(59, 130, 246, 0.8),
+      0 0 50px rgba(139, 92, 246, 0.5),
+      0 0 75px rgba(59, 130, 246, 0.3);
+  }
 }
 
 .neural-network {
@@ -47,43 +72,88 @@
   height: 100%;
   top: 0;
   left: 0;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.neural-connections {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0.6;
 }
 
 .neuron {
-  width: 12px;
-  height: 12px;
-  background-color: #f5f6fa;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, #ffffff, rgba(255, 255, 255, 0.8));
   border-radius: 50%;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 10px #00a8ff, 0 0 20px #00a8ff60;
+  box-shadow: 
+    0 0 8px rgba(255, 255, 255, 0.8),
+    0 0 16px rgba(59, 130, 246, 0.6),
+    0 0 24px rgba(139, 92, 246, 0.4);
+  animation: neuronPulse 1.5s ease-in-out infinite;
 }
+
+@keyframes neuronPulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Position neurons in a brain-like pattern */
+.neuron:nth-child(1) { top: 20%; left: 30%; animation-delay: 0s; }
+.neuron:nth-child(2) { top: 30%; left: 60%; animation-delay: 0.2s; }
+.neuron:nth-child(3) { top: 50%; left: 25%; animation-delay: 0.4s; }
+.neuron:nth-child(4) { top: 60%; left: 70%; animation-delay: 0.6s; }
+.neuron:nth-child(5) { top: 70%; left: 45%; animation-delay: 0.8s; }
+.neuron:nth-child(6) { top: 40%; left: 80%; animation-delay: 1s; }
 
 /* Loading Text */
 .loading-text {
-  font-size: 20px;
-  font-weight: 500;
+  font-size: 24px;
+  font-weight: 600;
   margin-bottom: 20px;
-  color: #f5f6fa;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.loading-text h2 {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 /* Progress Bar */
 .progress-container {
   width: 80%;
   max-width: 400px;
-  height: 8px;
-  background-color: rgba(255, 255, 255, 0.2);
+  height: 6px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
   border-radius: 4px;
-  margin: 0 auto 30px auto;
+  margin: 2rem auto;
   overflow: hidden;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .progress-bar {
   height: 100%;
-  background-color: #00a8ff;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
   border-radius: 4px;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
 }
 
 /* Floating Particles */
@@ -99,25 +169,30 @@
 
 .particle {
   position: absolute;
-  width: 6px;
-  height: 6px;
-  background-color: #00a8ff80;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.8), rgba(139, 92, 246, 0.4));
   border-radius: 50%;
   opacity: 0;
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.6);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .ai-brain {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
   }
 
-  .loading-text {
-    font-size: 16px;
+  .loading-text h2 {
+    font-size: 1.25rem;
   }
 
   .progress-container {
     width: 90%;
+  }
+  
+  .loading-content {
+    padding: 1rem;
   }
 }

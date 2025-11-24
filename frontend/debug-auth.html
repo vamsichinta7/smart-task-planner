@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Auth Test</title>
+</head>
+<body>
+    <h1>Smart Task Planner Auth Debug</h1>
+    <div id="status">Testing authentication...</div>
+    <button onclick="testAuth()">Test Login</button>
+    
+    <script>
+        const API_URL = 'https://smart-task-planner-2.onrender.com';
+        
+        async function testAuth() {
+            const statusDiv = document.getElementById('status');
+            
+            try {
+                statusDiv.innerHTML = 'Testing server connection...';
+                
+                // Test health endpoint first
+                const healthResponse = await fetch(API_URL + '/health');
+                if (!healthResponse.ok) {
+                    throw new Error('Server health check failed');
+                }
+                
+                statusDiv.innerHTML = 'Server is up. Testing auth...';
+                
+                // Test auth endpoint
+                const authResponse = await fetch(API_URL + '/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'demo@smarttaskplanner.com'
+                    })
+                });
+                
+                if (authResponse.ok) {
+                    const data = await authResponse.json();
+                    statusDiv.innerHTML = `✅ Auth successful! Token: ${data.token.substring(0, 20)}...`;
+                } else {
+                    const errorData = await authResponse.text();
+                    statusDiv.innerHTML = `❌ Auth failed (${authResponse.status}): ${errorData}`;
+                }
+                
+            } catch (error) {
+                statusDiv.innerHTML = `❌ Connection failed: ${error.message}`;
+            }
+        }
+        
+        // Auto-test on page load
+        window.onload = testAuth;
+    </script>
+</body>
+</html>
